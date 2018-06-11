@@ -20,12 +20,17 @@ const makeStyle = (buffer) => {
   for (let l in tile.layers) {
     let styleLayer = {};
     const layer = tile.layers[l];
+    const stylingTypeInfo = getSylingType(layer);
+    styleLayer._info = {};
+
     styleLayer.id = layer.name;
     styleLayer['source-layer'] = layer.name;
     styleLayer.source = 'view-tile';
-    styleLayer.type = getSylingType(layer);
+    styleLayer.type = stylingTypeInfo.styleType;
     styleLayer = setStyling(styleLayer);
     style.layers.push(styleLayer);
+    styleLayer._info.geometry = stylingTypeInfo.type;
+    styleLayer._info.total_features = layer.length;
   }
 
   return Promise.resolve({ layers: sortByWeight(style) });
@@ -36,7 +41,7 @@ const getSylingType = (layer) => {
     { type: 'Unknown', count: 0, styleType: 'line', weight: 0 },
     { type: 'Point', count: 0, styleType: 'circle', weight: 1 },
     { type: 'LineString', count: 0, styleType: 'line', weight: 2 },
-    { type: 'Polygon', count: 0, styleType: 'line', weight: 3 }
+    { type: 'Polygon', count: 0, styleType: 'fill', weight: 3 }
   ];
 
   for (let i = 0; i < layer.length; i++) {
@@ -47,24 +52,27 @@ const getSylingType = (layer) => {
     return b.count - a.count;
   });
 
-  return counts[0].styleType;
+  return counts[0];
 };
 
 const setStyling = (layer) => {
+  const color = getColor();
+  layer._info.color = color;
+
   switch(layer.type) {
     case 'circle':
       layer.layout = {};
       layer.paint = {
         'circle-radius': 5,
-        'circle-color': getColor(),
+        'circle-color': color,
         'circle-opacity': 0.75
       };
       break;
     case 'fill':
       layer.layout = {};
       layer.paint = {
-        'fill-opacity': 0.10,
-        'fill-color': getColor()
+        'fill-color': 'rgba(200, 200, 200, 0.01)',
+        'fill-outline-color': color
       };
       break;
     case 'line':
@@ -73,7 +81,7 @@ const setStyling = (layer) => {
         'line-join': 'round'
       };
       layer.paint = {
-        'line-color': getColor(),
+        'line-color': color,
         'line-opacity': 0.75,
         'line-width': 1
       };
@@ -90,7 +98,7 @@ const sortByWeight = (style) => {
 };
 
 let colorIterator = 0;
-const colors = ['#FE00AE', '#9A0AFB', '#02A9FE', '#ACFD04', '#FBA905'];
+const colors = ['#8c50c7', '#ff3c96', '#dc2b28', '#448ee4', '#ff6e00', '#f0dc00', '#01aa46', '#666666'];
 const getColor = () => {
   const c = colors[colorIterator];
   colorIterator++;

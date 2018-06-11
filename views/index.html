@@ -7,22 +7,106 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css' rel='stylesheet' />
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        body {
+          font-family: Inconsolata, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+          line-height: 1.5em;
+          font-size: 13.5px;
+          margin:0;
+          padding:0;
+        }
+        p {
+          padding: 10px;
+        }
+        #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 300px;
+        }
+        #sidebar {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          top: 0;
+          width: 300px;
+          background: #f6f6f6;
+          border-right:
+        }
+        #layer-list {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+        }
+        .layer-list-item {
+          padding: 7px;
+        }
+        .layer-list-item:hover {
+          cursor: pointer;
+          background-color: #fff;
+        }
+        .layer-list-item.active {
+          background-color: #fff;
+        }
+        .fake-link {
+          color: #00b1ff;
+        }
+        .fake-link:hover {
+          border-bottom: 1px solid #00b1ff;
+        }
     </style>
 </head>
 <body>
+<div id="sidebar">
+  <p><strong>Layers</strong> (<span class="fake-link" id="show-all-layers">show all</span>)
+  <ul id="layer-list">
+    <% style.layers.forEach(function(l) { %>
+      <li class="layer-list-item" style="border-left: 5px solid <%= l._info.color %>" data-layer-id="<%= l.id %>"><%= l.id %> (<%= l._info.geometry %>)</li>
+    <% }); %>
+  </ul>
+</div>
 <div id='map'></div>
 <script>
     mapboxgl.accessToken = '<%= params.accessToken %>';
     var map = new mapboxgl.Map({
       container: 'map', // container id
-      style: 'mapbox://styles/mapsam/cji6k02670ie82sr09n2r6vsi',
+      style: 'mapbox://styles/mapsam/cjhjocuth1koa2rlo3xxtk4su',
       zoom: 7,
       center: [-122.359794, 47.943776]
     });
 
-    map.showTileBoundaries = true;
+    var showAllElem = document.getElementById('show-all-layers');
+    showAllElem.onclick = showAll;
+    var items = document.getElementsByClassName('layer-list-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].onclick = filterLayers;
+    }
+
+    function filterLayers(e) {
+      e.preventDefault();
+      var id = this.getAttribute('data-layer-id');
+
+      for (var l = 0; l < items.length; l++) {
+        var tmpID = items[l].getAttribute('data-layer-id');
+        var visibility = tmpID === id ? 'visible' : 'none';
+        map.setLayoutProperty(tmpID, 'visibility', visibility);
+        items[l].classList.remove('active');
+      }
+
+      this.classList.add('active');
+    }
+
+    function showAll(e) {
+      e.preventDefault();
+
+      for (var l = 0; l < items.length; l++) {
+        var tmpID = items[l].getAttribute('data-layer-id');
+        map.setLayoutProperty(tmpID, 'visibility', 'visible');
+        items[l].classList.remove('active');
+      }
+    }
+
+    // map.showTileBoundaries = true;
 
     map.on('load', function() {
       map.addSource('view-tile', {
