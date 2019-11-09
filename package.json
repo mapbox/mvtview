@@ -18,7 +18,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "minimist": "^1.2.0",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "pbf": "^3.1.0"
   },
   "devDependencies": {
