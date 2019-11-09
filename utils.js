@@ -2,10 +2,14 @@ const pbf = require('pbf');
 const VT = require('@mapbox/vector-tile');
 
 const usage = `
-usage: mvtview [file] [options]
-example: mvtview path/to/tile.mvt --zxy 1/0/1
+usage:
+  mvtview [tile path] [options]
 
-  --zxy (optional) set the tile ZXY information in the form of {z}/{x}/{y}
+example:
+  mvtview path/to/tile.mvt --zxy 1/0/1
+
+  --token (optional) A public (pk.) Mapbox Access Token (by default uses $MapboxAccessToken from environment)
+  --zxy   (optional) set the tile ZXY information in the form of {z}/{x}/{y}
 `;
 
 const makeStyle = (buffer) => {
