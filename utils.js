@@ -1,5 +1,7 @@
-const pbf = require('pbf');
-const VT = require('@mapbox/vector-tile');
+import {VectorTile} from "@mapbox/vector-tile";
+import isGzip from 'is-gzip';
+import Pbf from "pbf";
+import zlib from 'zlib';
 
 const usage = `
 usage:
@@ -13,9 +15,17 @@ example:
 `;
 
 const makeStyle = (buffer) => {
+
+  console.log(`buffer: ${buffer}`)
+
+  if (isGzip(buffer)) {
+    console.log('is gzipped')
+    buffer = zlib.gunzipSync(buffer);
+  }
+
   let tile;
   try {
-    tile = new VT.VectorTile(new pbf(buffer));
+    let tile = new VectorTile(new Pbf(buffer));
   } catch(err) {
     return Promise.reject(err);
   }
