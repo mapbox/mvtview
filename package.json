@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mvtview",
-  "version": "0.3.1",
+  "version": "0.3.1-dev1",
   "description": "Visualize a Mapbox Vector Tile locally",
   "main": "index.js",
   "bin": {

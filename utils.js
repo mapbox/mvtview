@@ -1,7 +1,7 @@
-import {VectorTile} from "@mapbox/vector-tile";
-import isGzip from 'is-gzip';
-import Pbf from "pbf";
-import zlib from 'zlib';
+const VectorTile = require('@mapbox/vector-tile').VectorTile;
+const isGzip = require('is-gzip');
+const Pbf = require('pbf');
+const zlib = require('zlib');
 
 const usage = `
 usage:
