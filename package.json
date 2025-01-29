@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mvtview",
-  "version": "0.3.0",
+  "version": "0.3.1-dev4",
   "description": "Visualize a Mapbox Vector Tile locally",
   "main": "index.js",
   "bin": {
@@ -10,6 +10,7 @@
     "test": "tape test/test.js",
     "sample": "MapboxAccessToken=$MapboxToken node cli.js node_modules/@mapbox/mvt-fixtures/real-world/sanfrancisco/15-5238-12667.mvt"
   },
+  "type": "module",
   "author": "Mapbox",
   "license": "ISC",
   "dependencies": {
