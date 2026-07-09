@@ -113,8 +113,9 @@
       map.addSource('view-tile', {
         "type": "vector",
         "tiles": ["http://localhost:3000/{z}/{x}/{y}.mvt"],
-        "minzoom": 0,
-        "maxzoom": 22
+        "minzoom": 7,
+        "maxzoom": 7,
+        "bounds": [-122.359794, 47.943776, -122.359794, 47.943776]
       });
 
       <% style.layers.forEach(function(layer) { %>
